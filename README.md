@@ -1,6 +1,6 @@
 # FastAPI Supabase Application
 
-This project is a simple FastAPI application that implements user authentication, question retrieval, answer submission, and user statistics using Supabase for data management.
+This project is a simple FastAPI application that implements user authentication, question retrieval, answer submission, and user statistics using MongoDB for data management.
 
 ## Features
 
