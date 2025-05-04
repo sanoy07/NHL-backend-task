@@ -10,6 +10,7 @@ from jwt.exceptions import InvalidTokenError
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.openapi.models import APIKey, APIKeyIn, SecuritySchemeType
 from fastapi.openapi.utils import get_openapi
+from pydantic import BaseModel, EmailStr
 from fastapi import Security
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
