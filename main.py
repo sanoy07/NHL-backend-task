@@ -62,11 +62,11 @@ QUESTIONS = [
 
 # Pydantic Models
 class Signup(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class Login(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class Answer(BaseModel):
