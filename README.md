@@ -1,104 +1,158 @@
-# FastAPI Supabase Application
+This is a FastAPI-based backend application implementing user authentication, hourly question assignments, answer submission, and daily wallet updates using MongoDB for persistent data storage.
+Features
 
-This project is a simple FastAPI application that implements user authentication, question retrieval, answer submission, and user statistics using Supabase for data management.
+    User sign-up and login using JWT tokens
 
-## Features
+    Automatic hourly question assignment to each user
 
-- User sign-up and login
-- Random question retrieval
-- Answer submission with validation
-- User statistics tracking
+    Random question selection from a predefined pool
 
-## Requirements
+    Answer submission and validation
 
-- Python 3.7 or higher
-- Supabase account
+    Daily gem wallet updates based on answer accuracy
 
-## Setup Instructions
+    User statistics for daily performance
 
-1. **Clone the repository:**
+Requirements
 
-   ```bash
-   git clone <repository-url>
-   cd fastapi-supabase-app
-   ```
+    Python 3.7 or higher
 
-2. **Create a virtual environment:**
+    MongoDB connection URL (MongoDB Atlas or local instance)
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+    Environment variables for configuration
 
-3. **Install dependencies:**
+Setup Instructions
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+    Clone the repository:
 
-4. **Set up environment variables:**
+git clone <repository-url>
+cd fastapi-quiz-app
 
-   Copy the `.env.example` to `.env` and fill in your Supabase credentials:
+Create a virtual environment:
 
-   ```bash
-   cp .env.example .env
-   ```
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-   Update the `.env` file with your Supabase URL and API keys.
+Install dependencies:
 
-5. **Run the application:**
+pip install -r requirements.txt
 
-   You can run the FastAPI application using Uvicorn:
+Set up environment variables:
 
-   ```bash
-   uvicorn main:app --reload
-   ```
+Copy the .env.example to .env and fill in your MongoDB and JWT secrets:
 
-6. **Access the API:**
+cp .env.example .env
 
-   The API will be available at `http://127.0.0.1:8000`. You can access the interactive API documentation at `http://127.0.0.1:8000/docs`.
+Example .env file:
 
-## Usage Examples
+MONGO_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret
 
-- **Sign Up:**
+Run the application:
 
-  POST request to `/signup` with JSON body:
+    uvicorn main:app --reload
 
-  ```json
-  {
-    "username": "your_username",
-    "password": "your_password"
-  }
-  ```
+    Access the API:
 
-- **Login:**
+        Swagger UI: http://127.0.0.1:8000/docs
 
-  POST request to `/login` with form data:
+        ReDoc: http://127.0.0.1:8000/redoc
 
-  ```
-  username: your_username
-  password: your_password
-  ```
+API Endpoints
+Sign Up
 
-- **Get Random Question:**
+    POST /signup
 
-  GET request to `/questions/random` with Bearer token in the Authorization header.
+Request Body:
 
-- **Submit Answer:**
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
 
-  POST request to `/answers` with JSON body:
+Response:
 
-  ```json
-  {
-    "question_id": 1,
-    "answer": "your_answer"
-  }
-  ```
+{
+  "token": "<JWT token>"
+}
 
-- **Get User Statistics:**
+Login
 
-  GET request to `/stats` with Bearer token in the Authorization header.
+    POST /login
 
-## License
+Request Body:
+
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+
+Response:
+
+{
+  "token": "<JWT token>"
+}
+
+Get Current Hourly Question
+
+    GET /current-question
+
+    Requires Bearer token in Authorization header
+
+Response:
+
+{
+  "question_id": 5,
+  "question": "Who painted the Mona Lisa?",
+  "assigned_at": "2025-05-04T09:00:00"
+}
+
+Submit Answer
+
+    POST /answer
+
+    Requires Bearer token
+
+Request Body:
+
+{
+  "question_id": 5,
+  "user_answer": "Leonardo da Vinci"
+}
+
+Response:
+
+{
+  "correct": true,
+  "correct_answer": "Leonardo da Vinci",
+  "message": "Your answer has been recorded. Gem wallet will be updated at the end of the day."
+}
+
+Get User Stats
+
+    GET /stats
+
+    Requires Bearer token
+
+Response:
+
+{
+  "wallet_gems": 30,
+  "total_questions_today": 3,
+  "answered_today": 3,
+  "correct_today": 2
+}
+
+Scheduled Jobs
+
+    Hourly Question Assignment: Assigns a new random question to every user at the top of each hour.
+
+    Daily Wallet Update: At 11:59 PM daily, user gem balances are updated:
+
+        +20 gems if ≥50% correct
+
+        −10 gems otherwise (minimum balance: 0)
+
+License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
