@@ -1,7 +1,6 @@
 This is a FastAPI-based backend application implementing user authentication, hourly question assignments, answer submission, and daily wallet updates using MongoDB for persistent data storage.
 Features
 
-    User sign-up and login using JWT tokens
 
     Automatic hourly question assignment to each user
 
